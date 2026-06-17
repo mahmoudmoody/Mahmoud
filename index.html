@@ -47,16 +47,17 @@
     <div id="step2" style="display:none;">
       <p>طريقة الدفع؟</p>
       <input type="hidden" name="الدفع" id="payment-input" value="كاش">
-      <button type="button" class="option-btn" onclick="nextStep('كاش', 'step2', 'step3')">كاش</button>
-      <button type="button" class="option-btn" onclick="nextStep('قسط', 'step2', 'step3')">قسط</button>
+      <!-- تم تعديل النصوص هنا -->
+      <button type="button" class="option-btn" onclick="setBudgetAndNext('كاش', 1000000)">كاش</button>
+      <button type="button" class="option-btn" onclick="setBudgetAndNext('قسط', 700000)">قسط</button>
     </div>
 
     <div id="step3" style="display:none;">
       <p>تفاصيل الاتصال:</p>
       <input type="text" name="الاسم_الثنائي" placeholder="اسمك الثنائي" required>
       <input type="tel" name="رقم_التليفون" placeholder="رقم الموبايل" required>
-      <p>الميزانية (الحد الأقصى):</p>
-      <input type="range" name="الميزانية" min="1000000" max="20000000" step="50000" value="1000000" oninput="document.getElementById('bud-val').innerText = parseInt(this.value).toLocaleString() + ' ج.م'">
+      <p>الميزانية/المقدم:</p>
+      <input type="range" id="budget-range" name="الميزانية" min="1000000" max="20000000" step="50000" value="1000000" oninput="document.getElementById('bud-val').innerText = parseInt(this.value).toLocaleString() + ' ج.م'">
       <p id="bud-val" style="color:#ffc107">1,000,000 ج.م</p>
       <button type="submit" class="btn-quiz">إرسال الطلب</button>
     </div>
@@ -82,9 +83,18 @@
 <script>
   function nextStep(val, current, next) { 
     if(current === 'step1') document.getElementById('type-input').value = val;
-    if(current === 'step2') document.getElementById('payment-input').value = val;
     document.getElementById(current).style.display='none'; 
     document.getElementById(next).style.display='block'; 
+  }
+
+  function setBudgetAndNext(paymentType, minVal) {
+    document.getElementById('payment-input').value = paymentType;
+    const range = document.getElementById('budget-range');
+    range.min = minVal;
+    range.value = minVal;
+    document.getElementById('bud-val').innerText = minVal.toLocaleString() + ' ج.م';
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
   }
   
   async function sendToTelegram(event) {
@@ -92,7 +102,7 @@
     const token = "8869922515:AAFDHbzztpQdeZ9W8V8aLdWm0fm_BIgB3jY";
     const chatId = "8207978872"; 
     const formData = new FormData(event.target);
-    const msg = `🏡 طلب جديد:\n👤 الاسم: ${formData.get('الاسم_الثنائي')}\n📞 الموبايل: ${formData.get('رقم_التليفون')}\n🎯 النوع: ${formData.get('النوع')}\n💰 الدفع: ${formData.get('الدفع')}\n💵 الميزانية: ${formData.get('الميزانية')} ج.م`;
+    const msg = `🏡 طلب جديد:\n👤 الاسم: ${formData.get('الاسم_الثنائي')}\n📞 الموبايل: ${formData.get('رقم_التليفون')}\n🎯 النوع: ${formData.get('النوع')}\n💰 الدفع: ${formData.get('الدفع')}\n💵 المبلغ: ${formData.get('الميزانية')} ج.م`;
 
     try {
         await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
