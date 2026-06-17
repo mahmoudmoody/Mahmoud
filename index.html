@@ -38,21 +38,31 @@
   <form id="quiz-box" class="quiz-box" onsubmit="sendToTelegram(event)">
     <div id="step1">
       <p>ما هو نوع الوحدة؟</p>
-      <input type="hidden" name="النوع" id="type-input" value="شقة">
-      <button type="button" class="option-btn" onclick="nextStep('شقة', 'step1', 'step2')">شقة</button>
-      <button type="button" class="option-btn" onclick="nextStep('فيلا', 'step1', 'step2')">فيلا</button>
-      <button type="button" class="option-btn" onclick="nextStep('عمارة', 'step1', 'step2')">عمارة</button>
+      <input type="hidden" name="النوع" id="type-input">
+      <button type="button" class="option-btn" onclick="selectType('شقة')">شقة</button>
+      <button type="button" class="option-btn" onclick="nextStep('فيلا', 'step1', 'step3')">فيلا</button>
+      <button type="button" class="option-btn" onclick="nextStep('عمارة', 'step1', 'step3')">عمارة</button>
+    </div>
+
+    <div id="step2" style="display:none;">
+      <p>اختر الدور:</p>
+      <input type="hidden" name="الدور" id="floor-input">
+      <button type="button" class="option-btn" onclick="nextStep('أرضي', 'step2', 'step3')">أرضي</button>
+      <button type="button" class="option-btn" onclick="nextStep('دوبلكس', 'step2', 'step3')">دوبلكس</button>
+      <button type="button" class="option-btn" onclick="nextStep('أول', 'step2', 'step3')">أول</button>
+      <button type="button" class="option-btn" onclick="nextStep('ثاني', 'step2', 'step3')">ثاني</button>
+      <button type="button" class="option-btn" onclick="nextStep('ثالث', 'step2', 'step3')">ثالث</button>
+      <button type="button" class="option-btn" onclick="nextStep('روف', 'step2', 'step3')">روف</button>
     </div>
     
-    <div id="step2" style="display:none;">
+    <div id="step3" style="display:none;">
       <p>طريقة الدفع؟</p>
-      <input type="hidden" name="الدفع" id="payment-input" value="كاش">
-      <!-- تم تعديل النصوص هنا -->
+      <input type="hidden" name="الدفع" id="payment-input">
       <button type="button" class="option-btn" onclick="setBudgetAndNext('كاش', 1000000)">كاش</button>
       <button type="button" class="option-btn" onclick="setBudgetAndNext('قسط', 700000)">قسط</button>
     </div>
 
-    <div id="step3" style="display:none;">
+    <div id="step4" style="display:none;">
       <p>تفاصيل الاتصال:</p>
       <input type="text" name="الاسم_الثنائي" placeholder="اسمك الثنائي" required>
       <input type="tel" name="رقم_التليفون" placeholder="رقم الموبايل" required>
@@ -66,23 +76,34 @@
   <div id="thanks-msg" style="display:none; padding: 25px; background: rgba(255,255,255,0.05); border-radius: 18px;">
       <i class="fa-solid fa-circle-check" style="font-size: 45px; color: #25D366; margin-bottom: 15px;"></i>
       <h2 style="color: #ffc107; margin-bottom: 10px;">شكراً لثقتك في Mahmoud Sales!</h2>
-      <p style="font-size: 16px; opacity: 0.9;">تم استلام طلبك وسنتواصل معك قريباً.</p>
+      <p style="color: #ffffff; font-size: 16px;">تم استلام طلبك وسنتواصل معك قريباً.</p>
   </div>
 
   <a class="whatsapp" href="https://wa.me/201090315229" target="_blank"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
-  <a class="call" href="tel:201090315229"><i class="fa-solid fa-phone"></i> اتصل بنا</a>
+  <a class="call" href="tel:+201090315229"><i class="fa-solid fa-phone"></i> اتصل بنا</a>
   <a class="location" href="https://maps.app.goo.gl/0" target="_blank"><i class="fa-solid fa-location-dot"></i> موقعنا</a>
 
   <div class="footer">
     <p>⏰ مواعيد العمل: يومياً من 10 ص - 6 م</p>
-    شركه تطوير للاستثمار العقاري ترحب بكم 🏡❤️<br>
-    ©️ 2026 Mahmoud tatwer
+    شركه تطوير للاستثمار العقاري ترحب بكم 🏡❤️
   </div>
 </div>
 
 <script>
+  function selectType(val) {
+    document.getElementById('type-input').value = val;
+    if(val === 'شقة') {
+      document.getElementById('step1').style.display='none';
+      document.getElementById('step2').style.display='block';
+    } else {
+      document.getElementById('step1').style.display='none';
+      document.getElementById('step3').style.display='block';
+    }
+  }
+
   function nextStep(val, current, next) { 
     if(current === 'step1') document.getElementById('type-input').value = val;
+    if(current === 'step2') document.getElementById('floor-input').value = val;
     document.getElementById(current).style.display='none'; 
     document.getElementById(next).style.display='block'; 
   }
@@ -93,8 +114,8 @@
     range.min = minVal;
     range.value = minVal;
     document.getElementById('bud-val').innerText = minVal.toLocaleString() + ' ج.م';
-    document.getElementById('step2').style.display = 'none';
-    document.getElementById('step3').style.display = 'block';
+    document.getElementById('step3').style.display = 'none';
+    document.getElementById('step4').style.display = 'block';
   }
   
   async function sendToTelegram(event) {
@@ -102,7 +123,7 @@
     const token = "8869922515:AAFDHbzztpQdeZ9W8V8aLdWm0fm_BIgB3jY";
     const chatId = "8207978872"; 
     const formData = new FormData(event.target);
-    const msg = `🏡 طلب جديد:\n👤 الاسم: ${formData.get('الاسم_الثنائي')}\n📞 الموبايل: ${formData.get('رقم_التليفون')}\n🎯 النوع: ${formData.get('النوع')}\n💰 الدفع: ${formData.get('الدفع')}\n💵 المبلغ: ${formData.get('الميزانية')} ج.م`;
+    const msg = `🏡 طلب جديد:\n👤 الاسم: ${formData.get('الاسم_الثنائي')}\n📞 الموبايل: ${formData.get('رقم_التليفون')}\n🎯 النوع: ${formData.get('النوع')}\n🏠 الدور: ${formData.get('الدور') || 'غير محدد'}\n💰 الدفع: ${formData.get('الدفع')}\n💵 المبلغ: ${formData.get('الميزانية')} ج.م`;
 
     try {
         await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -114,11 +135,6 @@
         document.getElementById('thanks-msg').style.display='block';
     } catch (e) { alert("حدث خطأ، تأكد من الاتصال."); }
   }
-
-  const text = "أهلاً بك! مستعد نلاقي وحدتك المناسبة؟";
-  let i = 0;
-  function typeWriter() { if (i < text.length) { document.getElementById("typing-text").innerHTML += text.charAt(i); i++; setTimeout(typeWriter, 50); } }
-  window.onload = typeWriter;
 </script>
 </body>
 </html>
