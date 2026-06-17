@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahmoud Tatwer - العقارات</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #000000; color: #ffffff; text-align: center; }
+    .header { position: relative; height: 320px; background: url("logo.png") center / cover no-repeat; }
+    .header::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 160px; background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000000 90%); }
+    .container { max-width: 360px; margin: -40px auto 0; padding: 0 20px 40px; }
+    h1 { font-size: 24px; margin-top: 10px; }
+    #typing-text { font-size: 16px; opacity: 0.9; margin: 15px 0; min-height: 20px; color: #ffc107; }
+    button, a { display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(255,255,255,0.08); color: white; text-decoration: none; padding: 16px; margin: 14px 0; border-radius: 18px; font-size: 18px; backdrop-filter: blur(8px); transition: transform 0.15s ease; border: none; cursor: pointer; width: 100%; }
+    button:active { transform: scale(0.97); }
+    .whatsapp { background: rgba(37,211,102,0.28); }
+    .call { background: rgba(59,130,246,0.28); }
+    .location { background: rgba(239,68,68,0.28); }
+    .btn-quiz { background: rgba(255, 193, 7, 0.2); color: #ffc107; font-weight: bold; }
+    .quiz-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 18px; margin-bottom: 20px; }
+    .option-btn { background: rgba(255,255,255,0.1); width: 45%; padding: 12px; border-radius: 10px; border: none; color: white; cursor: pointer; margin: 5px; }
+    input[type="range"] { width: 100%; margin: 20px 0; accent-color: #ffc107; }
+    input[type="text"], input[type="tel"] { width: 100%; padding: 12px; border-radius: 10px; border: none; margin: 8px 0; background: rgba(255,255,255,0.9); color: #000; font-size: 16px; text-align: center; }
+    .footer { margin-top: 30px; font-size: 13px; opacity: 0.6; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="header"></div>
+<div class="container">
+  <h1>Mahmoud Sales</h1>
+  <div id="typing-text"></div>
+
+  <button class="btn-quiz" onclick="document.getElementById('quiz-box').style.display='block'">اكتشف وحدتك المناسبة</button>
+  
+  <form id="quiz-box" class="quiz-box" style="display:none;" action="https://formspree.io/f/xrevveae" method="POST" onsubmit="showThanks()">
+    <div id="step1">
+      <p>بتدور على إيه؟</p>
+      <input type="hidden" name="النوع" id="type-input">
+      <button type="button" class="option-btn" onclick="nextStep('سكن', 'step1', 'step2')">سكن</button>
+      <button type="button" class="option-btn" onclick="nextStep('استثمار', 'step1', 'step2')">استثمار</button>
+    </div>
+    
+    <div id="step2">
+      <p>طريقة الدفع؟</p>
+      <input type="hidden" name="الدفع" id="payment-input">
+      <button type="button" class="option-btn" onclick="setBudget(1000000, 'كاش')">كاش</button>
+      <button type="button" class="option-btn" onclick="setBudget(500000, 'قسط')">قسط</button>
+    </div>
+
+    <div id="step3" style="display:none;">
+      <p>نوع الدور؟</p>
+      <input type="hidden" name="الدور" id="floor-input">
+      <button type="button" class="option-btn" onclick="nextStep('أرضي', 'step3', 'step4')">أرضي</button>
+      <button type="button" class="option-btn" onclick="nextStep('دور أول', 'step3', 'step4')">دور أول</button>
+      <button type="button" class="option-btn" onclick="nextStep('دور تاني', 'step3', 'step4')">دور تاني</button>
+      <button type="button" class="option-btn" onclick="nextStep('دور تالت', 'step3', 'step4')">دور تالت</button>
+      <button type="button" class="option-btn" onclick="nextStep('روف', 'step3', 'step4')">روف</button>
+      <button type="button" class="option-btn" onclick="nextStep('دوبلكس', 'step3', 'step4')">دوبلكس</button>
+    </div>
+    
+    <div id="step4" style="display:none;">
+      <p>تفاصيل الاتصال:</p>
+      <input type="text" name="الاسم_الثنائي" placeholder="اسمك الثنائي" required>
+      <input type="tel" name="رقم_التليفون" placeholder="رقم الموبايل" required>
+      <p>الميزانية:</p>
+      <input type="range" id="budget-slider" name="الميزانية" min="500000" max="10000000" step="100000" value="500000" oninput="document.getElementById('bud-val').innerText = parseInt(this.value).toLocaleString() + ' ج.م'">
+      <p id="bud-val" style="color:#ffc107">500,000 ج.م</p>
+      <button type="submit" class="btn-quiz">إرسال الطلب</button>
+    </div>
+
+    <div id="thanks-msg" style="display:none; padding: 20px;">
+        <i class="fa-solid fa-circle-check" style="font-size: 40px; color: #25D366;"></i>
+        <p style="margin-top: 15px; font-size: 18px;">شكراً لثقتك في Mahmoud Sales!<br>تم استلام طلبك وسنتواصل معك قريباً.</p>
+    </div>
+  </form>
+
+  <a class="whatsapp" href="https://wa.me/201090315229" target="_blank"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
+  <a class="call" href="tel:201090315229"><i class="fa-solid fa-phone"></i> اتصل بنا</a>
+  <a class="location" href="https://maps.app.goo.gl/G14Tr7UTiexUUAEA8" target="_blank"><i class="fa-solid fa-location-dot"></i> موقعنا</a>
+
+  <div class="footer">
+    شركه تطوير للاستثمار العقاري ترحب بكم 🏡❤️<br>
+    ©️ 2026 Mahmoud tatwer
+  </div>
+</div>
+
+<script>
+  // إخفاء الخطوات عند البدء
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step3').style.display='none';
+  document.getElementById('step4').style.display='none';
+
+  function nextStep(val, current, next) { 
+    if(current === 'step1') document.getElementById('type-input').value = val;
+    if(current === 'step3') document.getElementById('floor-input').value = val;
+    document.getElementById(current).style.display='none'; 
+    document.getElementById(next).style.display='block'; 
+  }
+
+  function setBudget(minVal, payType) {
+    document.getElementById('payment-input').value = payType;
+    let slider = document.getElementById('budget-slider');
+    slider.min = minVal;
+    slider.value = minVal;
+    document.getElementById('bud-val').innerText = minVal.toLocaleString() + ' ج.م';
+    document.getElementById('step2').style.display='none';
+    document.getElementById('step3').style.display='block';
+  }
+  
+  function showThanks() {
+    event.preventDefault();
+    document.getElementById('quiz-box').style.display='block';
+    document.getElementById('step4').style.display='none';
+    document.getElementById('thanks-msg').style.display='block';
+    fetch(document.getElementById('quiz-box').action, {
+        method: 'POST',
+        body: new FormData(document.getElementById('quiz-box')),
+    });
+  }
+
+  const text = "أهلاً بك! مستعد نلاقي وحدتك المناسبة؟";
+  let i = 0;
+  function typeWriter() { if (i < text.length) { document.getElementById("typing-text").innerHTML += text.charAt(i); i++; setTimeout(typeWriter, 50); } }
+  window.onload = typeWriter;
+</script>
+</body>
+</html>
